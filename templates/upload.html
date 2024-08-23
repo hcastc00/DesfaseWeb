@@ -47,7 +47,7 @@
     <div class="upload-container">
         <h1>Subir Imagen</h1>
         <p>Haz clic en el botón para seleccionar una imagen o arrástrala aquí.</p>
-        <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+        <form id="upload-form" action="/" method="post" enctype="multipart/form-data">
             <input type="file" id="file-input" name="image" accept="image/*" class="hidden">
             <button type="button" class="upload-button" onclick="document.getElementById('file-input').click()">Seleccionar Imagen</button>
         </form>
@@ -61,12 +61,12 @@
             const file = fileInput.files[0];
             if (file && file.type.startsWith('image/')) {
                 const formData = new FormData(form);
-                fetch('/upload', {
+                fetch('/', {
                     method: 'POST',
                     body: formData
                 }).then(response => {
                     if (response.ok) {
-                        window.location.href = '/';  // Redirige a la página principal después de la carga exitosa
+                        window.location.href = '/pantalla';  // Redirige a la página principal después de la carga exitosa
                     } else {
                         alert('Error al subir la imagen');
                     }
