@@ -1,17 +1,33 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
-def delete_old_images():
-    # Borra todas las imágenes en el directorio de uploads, excepto currentIMG
+def move_old_images_to_date_folder():
+    # Crear el nombre de la carpeta basado en la fecha actual
+    date_folder = os.path.join(app.config['UPLOAD_FOLDER'], datetime.now().strftime('%Y-%m-%d'))
+    
+    # Crear la carpeta si no existe
+    if not os.path.exists(date_folder):
+        os.makedirs(date_folder)
+
+    # Mover las imágenes existentes a la carpeta del día
     for filename in os.listdir(app.config['UPLOAD_FOLDER']):
         if filename != 'currentIMG':
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            os.remove(file_path)
+            # Extraer la extensión del archivo original
+            file_extension = os.path.splitext(filename)[1]
+            
+            # Crear el nuevo nombre de archivo basado en la hora actual
+            new_filename = datetime.now().strftime('%H-%M-%S') + file_extension
+            
+            # Mover el archivo a la carpeta del día con el nuevo nombre
+            old_file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            new_file_path = os.path.join(date_folder, new_filename)
+            os.rename(old_file_path, new_file_path)
 
 @app.route('/pantalla')
 def index():
@@ -34,8 +50,8 @@ def upload_image():
             return redirect(url_for('upload_image'))
 
         if file:
-            # Eliminar imágenes antiguas
-            delete_old_images()
+            # Mover imágenes antiguas a la carpeta de la fecha actual
+            move_old_images_to_date_folder()
             
             # Guardar la nueva imagen como currentIMG
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'currentIMG')
