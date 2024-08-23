@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visor de Imágenes</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .no-image {
+            color: #6c757d;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    {% if image %}
+    <img src="{{ url_for('static', filename='uploads/' ~ image) }}" alt="Imagen Actual">
+    {% else %}
+    <p class="no-image">No se ha subido ninguna imagen aún.</p>
+    {% endif %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.3/socket.io.min.js"></script>
+    <script type="text/javascript">
+        var socket = io();
+        socket.on('image_uploaded', function(data) {
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>
