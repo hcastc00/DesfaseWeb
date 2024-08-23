@@ -1,0 +1,9 @@
+# Ignorar archivos de compilación de Python
+*.pyc
+__pycache__/
+
+# Ignorar entorno virtual
+venv/
+
+# Ignorar la carpeta uploads dentro de static
+static/uploads/
