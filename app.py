@@ -17,7 +17,8 @@ def move_old_images_to_date_folder():
 
     # Mover las imágenes existentes a la carpeta del día
     for filename in os.listdir(app.config['UPLOAD_FOLDER']):
-        if filename != 'currentIMG':
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        if os.path.isfile(file_path) and filename != 'currentIMG':
             # Extraer la extensión del archivo original
             file_extension = os.path.splitext(filename)[1]
             
@@ -25,9 +26,9 @@ def move_old_images_to_date_folder():
             new_filename = datetime.now().strftime('%H-%M-%S') + file_extension
             
             # Mover el archivo a la carpeta del día con el nuevo nombre
-            old_file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             new_file_path = os.path.join(date_folder, new_filename)
-            os.rename(old_file_path, new_file_path)
+            os.rename(file_path, new_file_path)
+
 
 @app.route('/pantalla')
 def index():
