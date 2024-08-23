@@ -13,7 +13,7 @@ def delete_old_images():
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             os.remove(file_path)
 
-@app.route('/pantalla', methods=['GET', 'POST'])
+@app.route('/pantalla')
 def index():
     # Siempre mostrar currentIMG
     current_image = os.path.join(app.config['UPLOAD_FOLDER'], 'currentIMG')
@@ -22,7 +22,7 @@ def index():
     else:
         return render_template('index.html', image=None)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def upload_image():
     if request.method == 'POST':
         if 'image' not in request.files:
