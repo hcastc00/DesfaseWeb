@@ -72,7 +72,22 @@ def upload_image():
             socketio.emit('image_uploaded', {'image': 'currentIMG' + file_extension})
             return "Imagen subida", 200
 
-    return render_template('upload.html')
+
+    # Buscar el archivo currentIMG con cualquier extensión en el directorio de uploads
+    upload_folder = app.config['UPLOAD_FOLDER']
+    current_image_filename = None
+
+    # Iterar a través de los archivos en el directorio de uploads
+    for filename in os.listdir(upload_folder):
+        if filename.startswith('currentIMG') and os.path.isfile(os.path.join(upload_folder, filename)):
+            current_image_filename = filename
+            break
+
+    # Renderizar la plantilla y pasar el nombre completo del archivo
+    if current_image_filename:
+        return render_template('upload.html', image=current_image_filename)
+    else:
+        return render_template('upload.html', image=None)
 
 @socketio.on('connect')
 def test_connect():
